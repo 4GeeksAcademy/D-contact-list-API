@@ -1,13 +1,13 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			contacts: [],
-			// stage: {
-			// 	full_name: "",
-			// 	email: "",
-			// 	address: "",
-			// 	phone: "",
-			// }
+			contacts: [ {
+				id:1, 
+				full_name: "",
+				email: "",
+				address: "",
+				phone: "",
+			}],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction

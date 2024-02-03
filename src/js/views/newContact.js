@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate} from "react-router-dom";
-
-
 import { Context } from "../store/appContext";
 
 
 import "../../styles/demo.css";
 
 export const AddNewContact = () => {
-    const { store, actions } = useContext(Context);
+    const {store, actions} = useContext(Context);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
