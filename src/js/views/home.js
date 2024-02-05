@@ -11,20 +11,25 @@ export const Home = () => {
 	useEffect(() => {
 	  actions.getContact();
 	}, []);
-  
-	const contactItems = store.contacts.map((item, index) => (
-	  <p key={item.id}>{item.full_name}</p>,
-	  <p key={item.id}>{item.address}</p>,
-	  <p key={item.id}>{item.phone}</p>,
-	  <p key={item.id}>{item.email}</p>
-	));
-  
+	
+	const contactItems = store.contacts.map((item) => (
+		<ContactCard
+		  key={item.id}
+		  fullName={item.full_name}
+		  address={item.address}
+		  phone={item.phone}
+		  email={item.email}
+		/>
+	  ));
+
+	  
+
 	return (
 	  <div className="text-center m-5">
 		<div>
 		  <h1>Your contact list</h1>
 		</div>
-		<div>{contactItems}</div>
+		<div className="homeView">{contactItems}</div>
 	  </div>
 	);
   };

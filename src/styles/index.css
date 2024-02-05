@@ -9,3 +9,12 @@
 * {
     font-family: "Ubuntu Condensed", sans-serif;
 }  
+
+.homeView :hover{ 
+    border-color: goldenrod;
+}
+
+h1{ 
+    color: goldenrod;
+    margin-bottom: 20px;
+}

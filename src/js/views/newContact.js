@@ -52,9 +52,7 @@ const handleSave = (e) => {
             <Link to="/">
                 <button className="btn btn-dark">Back home</button>
             </Link>
-            <Link>
-                <button className="btn btn-dark" onClick={(e) => handleSave(e)}>Save contact</button>
-            </Link>
+                <button className="btn btn-dark" onClick={(e) => handleSave(e)}>Save</button>
             </div> 
         </div>
     );
