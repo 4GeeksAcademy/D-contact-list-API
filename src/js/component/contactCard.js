@@ -1,5 +1,5 @@
 import React,  {useContext, useEffect} from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams} from "react-router-dom";
 import { Context } from "../store/appContext";
 
 
@@ -8,6 +8,8 @@ import "../../styles/demo.css";
 
 export const ContactCard = ({ fullName, address, phone, email,id}) => {
 	const { store, actions } = useContext(Context);
+	const contactId = store.contacts 
+	
 
 
 	const deleteContact = () => {
@@ -36,11 +38,12 @@ export const ContactCard = ({ fullName, address, phone, email,id}) => {
 				<Link to={`/single/${id}`}>
 				<button type="button" className="btn btn-secondary m-2"><i className="far fa-edit"></i></button>
 				</Link>
-			
-				<button type="button" className="btn btn-danger m-2" href="#" onClick={(e) => deleteContact(e)}><i className="fas fa-trash-alt"></i></button>
+				
+				<button type="button" className="btn btn-danger m-2" href="#" 
+				onClick={deleteContact}><i className="fas fa-trash-alt"></i></button>
 				
 			</div>
-            </div>
+    </div>
 	); 
 };
 		

@@ -1,4 +1,4 @@
-import React, {useEffect, useContext}from "react";
+import React, {useEffect, useContext, useState}from "react";
 import rigoImage from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import { Context } from "../store/appContext";
@@ -19,6 +19,7 @@ export const Home = () => {
 		  address={item.address}
 		  phone={item.phone}
 		  email={item.email}
+		  id={item.id}
 		/>
 	  ));
 
@@ -29,7 +30,8 @@ export const Home = () => {
 		<div>
 		  <h1>Your contact list</h1>
 		</div>
-		<div className="homeView">{contactItems}</div>
+		<div className="homeView">{contactItems}
+		</div>
 	  </div>
 	);
   };

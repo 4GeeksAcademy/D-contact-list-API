@@ -1,39 +1,30 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			contacts: [ {
-				id:1, 
-				full_name: "",
-				email: "",
-				address: "",
-				phone: "",
-			}],
-			specificContact: null,
+			contacts: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
 			getContact: async () => {
-				try {
-					const response = await fetch('https://playground.4geeks.com/apis/fake/contact/agenda/danji_slug', {
+					fetch('https://playground.4geeks.com/apis/fake/contact/agenda/danji_slug', {
 						method: 'GET',
 						headers: {
 							'Content-Type': 'application/json'
 						}
-					});
-			
-					if (!response.ok) {
-						throw new Error(`HTTP error! Status: ${response.status}`);
-					}
-			
-					let data = await response.json();
-			
-					setStore({ contacts: data });
-					return getStore().contacts;
-			
-				} catch (error) {
-					console.error(error);
-				}
-			},
+					})
+					.then(resp => {
+						console.log(resp.ok);
+						console.log(resp.status); 
+						return resp.json(); 
+					})
+					.then(data => {
+						setStore({contacts: data});
+						
+					})
+					.catch(error => {
+						console.log(error);
+					})
+				},
 	
 
 			createContact: async (name,address, phone, email) => {
@@ -46,8 +37,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						  full_name: name,
 						  email: email,
 						  agenda_slug: "danji_slug",
-						  address: address,
+						  address: address, 
 						  phone: phone,
+						  newid: Date.now()
 						}),
 					  }
 					);
@@ -61,117 +53,74 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore ({specificContact : contactID })
 			},
 				
-			updateContact: (id, contacts) => {
-				fetch(`https://playground.4geeks.com/apis/fake/contact/${id}`, {
-				  method: "PUT",
-				  headers: {
-					"Content-Type": "application/json",
-				  },
-				  body: JSON.stringify(contacts),
+			updateContact:  (contact) => {
+				let store = getStore();
+			fetch( `https://playground.4geeks.com/apis/fake/contact/${contact.id}`,{
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({						
+						"full_name": contact.full_name,
+                      	"email": contact.email,
+                      	"agenda_slug": "danji_slug",
+                      	"address": contact.address,
+                      	"phone": contact.phone,
+						"newid":contact.id
+					})					
 				})
-				  .then((resp) => {
-					if (!resp.ok) throw Error(resp.statusText);
-					return resp.json();
-				  })
-				  .then((data) => {
+				.then(resp => {
+					console.log(resp.ok);
+					console.log(resp.status); 
+					return resp.json(); 
+				})
+				.then(data => {
 					console.log(data);
-					getActions().getContact();
-				  })
-				  .catch((error) => {
-					console.error("Error", error);
-				  });
-			},
-			  
-			deleteContact: async (contactId) => {
-				try {
-					const response = await fetch('https://playground.4geeks.com/apis/fake/contact/agenda/danji_slug', {
-						method: 'DELETE',
-						headers: new Headers({
-							'Content-Type': 'application/json'
-						})
+					let updatedContact = store.contacts.find((item) => {
+						return item.id == contact.id;
+
 					});
-			
+					updatedContact.full_name = contact.full_name;
+					updatedContact.email = contact.email;
+					updatedContact.address = contact.address;
+					updatedContact.phone = contact.phone;
+					updatedContact.newid = contact.newid;
+					let newContact = [...store.contacts];
+					setStore({contacts: newContact});
+					
+				})
+				.catch(error => {
+					
+					console.log(error);
+				})						
+
+
+			},
+			deleteContact: async (contactId) => {
+                try {
+                    const response = await fetch(`https://playground.4geeks.com/apis/fake/contact/${contactId}`, {
+                        method: 'DELETE',
+                        headers: new Headers({
+                            'Content-Type': 'application/json'
+                        })
+                    });
+					console.log(response, "i am supposed to be showing");
+					
 					if (!response.ok) {
 						throw new Error(`HTTP error! Status: ${response.status}`);
 					}
 			
 					setStore((prevState)  => {
-						const updatedData = prevState.myData.filter(contact => contact.id !== contactId);
-						return { contact: updatedData };
+						console.log(prevState,"I'm supposed to be showing too")
+						const updatedContact= prevState.contacts.filter(contact => contact.id !== id);
+						return { contact: updatedContact};
 					});
 			
 				} catch (error) {
 					console.error(error);
 				}
 				
-			},
-
-			specificId: async (id) => { 
-				try {
-					const response = await fetch(`https://playground.4geeks.com/apis/fake/contact/ ${id}`, {
-						method: 'GET',
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					});
-			
-					if (!response.ok) {
-						throw new Error(`HTTP error! Status: ${response.status}`);
-					}
-			
-					let data = await response.json();
-			
-					setStore({contacts:data });
-					return getStore().contacts;
-			
-				} catch (error) {
-					console.error(error);
-				}
-
-			},
-
-			singleContactUpdate: (id, name, email, address, phone) => {
-				const store = getStore();
-			  
-				fetch(`https://playground.4geeks.com/apis/fake/contact/agenda/danji_slug`, {
-				  method: "PUT",
-				  headers: {
-					"Content-Type": "application/json",
-				  },
-				  body: JSON.stringify({
-					full_name: name,
-					email: email,
-					agenda_slug: "danji_slug",
-					address: address,
-					phone: phone,
-				  }),
-				})
-				  .then((response) => {
-					if (!response.ok) {
-					  throw new Error(`HTTP error! Status: ${response.status}`);
-					}
-					return response.json();
-				  })
-				  .then((updatedContact) => {
-					const changedContact = store.contacts.map((contact) => {
-					  if (contact.id === id) {
-						return {
-						  ...contact,
-						  full_name: updatedContact.full_name,
-						  email: updatedContact.email,
-						  address: updatedContact.address,
-						  phone: updatedContact.phone,
-						};
-					  }
-					  return contact;
-					});
-			  
-					setStore({ contacts: changedContact });
-				  })
-				  .catch((error) => {
-					console.error("Error updating contact:", error);
-				  });
-			  }
+			},	
 			  
 		
 		}
